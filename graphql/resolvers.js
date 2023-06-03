@@ -1,6 +1,12 @@
 const { Variation } = require("../models");
 
 const resolvers = {
+  Query: {
+    getVariation: async (_, { variationId }) => {
+      result = await Variation.findById(variationId).exec();
+      return result;
+    },
+  },
   Mutation: {
     createVariation: async (_, { data }) => {
       // const {

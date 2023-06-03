@@ -4,10 +4,13 @@ const typeDefs = gql`
   type Query {
     "a query to retrieve a Card based on its MongoDB _id, may return null for non-existent _id's"
     getCard(_id: ID!): Card
+
+    "a query to retrieve a Variation based on its MongoDB _id, may return null for non-existent _id's"
+    getVariation(variationId: ID!): Variation
   }
 
   type Mutation {
-    "creates a new Variation to be assigned to a Card later and returns the newly created Variation"
+    "creates a new Variation to be assigned to a Card later and returns the newly created Variation if successful, otherwise null"
     createVariation(data: CreateVariationInput): Variation
   }
 
