@@ -7,7 +7,7 @@ const CardSchema = new Schema({
   ],
   nextAttemptDate: { type: String, required: true },
   dateCreated: { type: String, required: true },
-  attempts: [{ type: Schema.Types.ObjectId, ref: " Attempt", required: true }],
+  attempts: [{ type: Schema.Types.ObjectId, ref: "Attempt" }],
 });
 
 module.exports = model("Card", CardSchema);

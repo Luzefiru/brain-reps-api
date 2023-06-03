@@ -1,9 +1,31 @@
-const gql = require('graphql-tag');
+const gql = require("graphql-tag");
 
 const typeDefs = gql`
   type Query {
-    "a query to retrieve a card based on its MongoDB _id, may return null for non-existent _id's"
+    "a query to retrieve a Card based on its MongoDB _id, may return null for non-existent _id's"
     getCard(_id: ID!): Card
+  }
+
+  type Mutation {
+    "creates a new Variation to be assigned to a Card later and returns the newly created Variation"
+    createVariation(data: CreateVariationInput): Variation
+  }
+
+  input CreateVariationInput {
+    "the flashcard's question or prompt to be shown to the user"
+    body: String!
+    "the possible answers to the flashcard's body text"
+    answer: [String!]!
+    "the answer's category"
+    answerType: String!
+    "a note to be shown together with the flashcard's answer"
+    answerNotes: String
+    "the input field's default value, e.g. <input value='something here' />"
+    answerPrefilledValue: String
+    "a list of keywords associated with the flashcard"
+    keywords: [String!]
+    "determines whether a Card's answer is case sensitive, default value is false"
+    isCaseSensitive: Boolean!
   }
 
   """
