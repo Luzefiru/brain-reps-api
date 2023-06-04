@@ -1,9 +1,9 @@
-const gql = require("graphql-tag");
+const gql = require('graphql-tag');
 
 const typeDefs = gql`
   type Query {
     "a query to retrieve a Card based on its MongoDB _id, may return null for non-existent _id's"
-    getCard(_id: ID!): Card
+    getCard(cardId: ID!): Card
 
     "a query to retrieve a Variation based on its MongoDB _id, may return null for non-existent _id's"
     getVariation(variationId: ID!): Variation
@@ -11,7 +11,7 @@ const typeDefs = gql`
 
   type Mutation {
     "creates a new Variation to be assigned to a Card later and returns the newly created Variation if successful, otherwise null"
-    createVariation(data: CreateVariationInput): Variation
+    createVariation(data: CreateVariationInput): CreateVariationResponse
   }
 
   input CreateVariationInput {
@@ -29,6 +29,17 @@ const typeDefs = gql`
     keywords: [String!]
     "determines whether a Card's answer is case sensitive, default value is false"
     isCaseSensitive: Boolean!
+  }
+
+  type CreateVariationResponse {
+    "Similar to HTTP status code, represents the status of the mutation"
+    code: Int!
+    "Indicates whether the mutation was successful"
+    success: Boolean!
+    "Human-readable message for the UI"
+    message: String!
+    "The mutated object can be null since the mutation may fail"
+    variation: Variation
   }
 
   """
