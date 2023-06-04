@@ -12,9 +12,9 @@ const resolvers = {
     },
   },
   Mutation: {
-    createVariation: async (_, { data }) => {
+    createVariation: async (_, { variationFields }) => {
       try {
-        const newVariation = new Variation(data);
+        const newVariation = new Variation(variationFields);
         const result = await newVariation.save();
         return {
           code: 201,
@@ -28,6 +28,30 @@ const resolvers = {
           code: 500,
           success: false,
           message: `createVariation Error: ${err}`,
+          variation: null,
+        };
+      }
+    },
+    updateVariation: async (_, { variationId, variationFields }) => {
+      try {
+        const result = await Variation.findByIdAndUpdate(
+          variationId,
+          {
+            $set: { ...variationFields },
+          },
+          { new: true } // return the newly updated Variation to the result variable
+        ).exec();
+        return {
+          code: 200,
+          success: true,
+          message: `Succesfully updated variation with _id: ${variationId}`,
+          variation: result,
+        };
+      } catch (err) {
+        return {
+          code: 500,
+          success: false,
+          message: `updateVariation Error: ${err}`,
           variation: null,
         };
       }

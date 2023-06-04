@@ -4,19 +4,25 @@ const typeDefs = gql`
   type Query {
     "a query to retrieve a Card based on its MongoDB _id, may return null for non-existent _id's"
     getCard(cardId: ID!): Card
-
     "a query to retrieve a Variation based on its MongoDB _id, may return null for non-existent _id's"
     getVariation(variationId: ID!): Variation
   }
 
   type Mutation {
     "creates a new Variation to be assigned to a Card later and returns the newly created Variation if successful, otherwise null"
-    createVariation(data: CreateVariationInput): CreateVariationResponse
+    createVariation(
+      variationFields: MutationVariationFields!
+    ): CreateVariationResponse
+    "overwrites an existing Variation based on its _id, with the fields passed into the endpoint"
+    updateVariation(
+      variationId: ID!
+      variationFields: MutationVariationFields!
+    ): UpdateVariationResponse
     "deletes a Variation based on its _id field in MongoDB"
     deleteVariation(variationId: ID!): DeleteVariationResponse
   }
 
-  input CreateVariationInput {
+  input MutationVariationFields {
     "the flashcard's question or prompt to be shown to the user"
     body: String!
     "the possible answers to the flashcard's body text"
@@ -35,6 +41,17 @@ const typeDefs = gql`
 
   type CreateVariationResponse {
     "202 indicates an operation success, while 500 indicates a MongoDB error"
+    code: Int!
+    "Indicates whether the mutation was successful"
+    success: Boolean!
+    "Human-readable message for the UI"
+    message: String!
+    "The mutated object can be null since the mutation may fail"
+    variation: Variation
+  }
+
+  type UpdateVariationResponse {
+    "200 indicates an operation success, while 500 indicates a MongoDB error"
     code: Int!
     "Indicates whether the mutation was successful"
     success: Boolean!
