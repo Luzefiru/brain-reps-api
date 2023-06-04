@@ -7,7 +7,7 @@ const resolvers = {
         result = await Variation.findById(variationId).exec();
         return result;
       } catch (err) {
-        console.log('getVariation Error:', err);
+        console.log(`getVariation Error: ${err}`);
       }
     },
   },
@@ -23,12 +23,39 @@ const resolvers = {
           variation: result,
         };
       } catch (err) {
-        console.log('createVariation Error:', err);
+        console.log(`createVariation Error: ${err}`);
         return {
           code: 500,
           success: false,
           message: `createVariation Error: ${err}`,
           variation: null,
+        };
+      }
+    },
+    deleteVariation: async (_, { variationId }) => {
+      try {
+        const result = await Variation.deleteOne({ _id: variationId }).exec();
+
+        // if the number of deleted documents is 0
+        if (result.deletedCount === 0) {
+          return {
+            code: 400,
+            success: false,
+            message: `deleteVariation Error: Variation with _id: ${variationId} does not exist!`,
+          };
+        } else {
+          // otherwise, the operation was successful
+          return {
+            code: 200,
+            success: true,
+            message: `Successfully deleted Variation with _id: ${variationId}`,
+          };
+        }
+      } catch (err) {
+        return {
+          code: 500,
+          success: false,
+          message: `deleteVariation Error: ${err}`,
         };
       }
     },

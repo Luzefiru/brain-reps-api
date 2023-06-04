@@ -12,6 +12,8 @@ const typeDefs = gql`
   type Mutation {
     "creates a new Variation to be assigned to a Card later and returns the newly created Variation if successful, otherwise null"
     createVariation(data: CreateVariationInput): CreateVariationResponse
+    "deletes a Variation based on its _id field in MongoDB"
+    deleteVariation(variationId: ID!): DeleteVariationResponse
   }
 
   input CreateVariationInput {
@@ -32,7 +34,7 @@ const typeDefs = gql`
   }
 
   type CreateVariationResponse {
-    "Similar to HTTP status code, represents the status of the mutation"
+    "202 indicates an operation success, while 500 indicates a MongoDB error"
     code: Int!
     "Indicates whether the mutation was successful"
     success: Boolean!
@@ -40,6 +42,15 @@ const typeDefs = gql`
     message: String!
     "The mutated object can be null since the mutation may fail"
     variation: Variation
+  }
+
+  type DeleteVariationResponse {
+    "200 indicates a successful deletion, 400 indicates that the Variation _id does not exist, while 500 indicates a server error"
+    code: Int!
+    "Indicates whether the mutation was successful"
+    success: Boolean!
+    "Human-readable message for the UI"
+    message: String!
   }
 
   """
